@@ -17,8 +17,8 @@ public class Main {
             try {
                 for (int i = 0; i < users.length; i++) {
                     userService.saveUser(users[i].getName(), users[i].getLastName(), users[i].getAge());
+                    System.out.println("User с именем - " + users[i].getName() + " добавлен в базу данных");
                 }
-                userService.removeUserById(1);
                 List<User> listUsers = userService.getAllUsers();
                 for (User user: listUsers) {
                     System.out.println("Name: " + user.getName() + " " + user.getLastName() + " Age: " + user.getAge());
