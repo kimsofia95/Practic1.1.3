@@ -5,6 +5,7 @@ import jm.task.core.jdbc.util.Util;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,11 @@ public class UserDaoJDBCImpl implements UserDao {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))");
             stmt.close();
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
     }
 
@@ -32,8 +36,11 @@ public class UserDaoJDBCImpl implements UserDao {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("DROP table IF EXISTS users");
             stmt.close();
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
     }
 
@@ -42,8 +49,11 @@ public class UserDaoJDBCImpl implements UserDao {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("INSERT users(name, lastName, age) VALUES ('" + name + "', '" + lastName + "', " + age + ")");
             stmt.close();
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
     }
 
@@ -51,8 +61,11 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = Util.DataBaseConnection("com.mysql.cj.jdbc.Driver", this.url, this.login, this.password)) {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM users WHERE id IN ('" + id + "')");
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
     }
 
@@ -67,10 +80,14 @@ public class UserDaoJDBCImpl implements UserDao {
                 Byte age = rs.getByte("age");
                 usersList.add(new User(name, lastName, age));
             }
+            rs.close();
             stmt.close();
             return usersList;
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
         return null;
     }
@@ -79,8 +96,11 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = Util.DataBaseConnection("com.mysql.cj.jdbc.Driver", this.url, this.login, this.password)) {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("DELETE from users");
-        } catch (Exception e) {
-            e.getStackTrace();
+        } catch (SQLException e) {
+            try {
+                throw e;
+            } catch (SQLException throwables) {
+            }
         }
     }
 }
