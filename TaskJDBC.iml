@@ -7,6 +7,9 @@
         <naming-strategy-map />
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -33,5 +36,6 @@
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.jboss:jandex:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:4.3.10.Final" level="project" />
+    <orderEntry type="library" name="Spring-5.2.3.RELEASE" level="project" />
   </component>
 </module>
