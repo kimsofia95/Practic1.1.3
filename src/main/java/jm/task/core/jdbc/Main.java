@@ -1,13 +1,9 @@
 package jm.task.core.jdbc;
 import jm.task.core.jdbc.model.User;
-import java.sql.*;
 import java.util.List;
-import javax.persistence.*;
 
 import jm.task.core.jdbc.service.UserService;
-import jm.task.core.jdbc.util.Util;
 import jm.task.core.jdbc.service.UserServiceImpl;
-import org.hibernate.Session;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,8 +23,6 @@ public class Main {
 
             userService.cleanUsersTable();
             userService.dropUsersTable();
-           // Session session = Util.createHibernateSession();
-            //session.getSessionFactory().close();
         } catch (Exception e) {
             e.printStackTrace();
         }
