@@ -22,11 +22,10 @@ public class Util {
     private final static String password = "root";
     private final static String className = "com.mysql.cj.jdbc.Driver";
 
-    private Util()
-    {
+    private Util() {
     }
-    public static Util getInstance()
-    {
+    
+    public static Util getInstance() {
         if (sInstance == null)
             sInstance = new Util();
         return sInstance;
