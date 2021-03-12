@@ -20,7 +20,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))");
         } catch (SQLException e) {
-           
+            e.printStackTrace();
         }
     }
 
@@ -28,7 +28,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("DROP table IF EXISTS users");
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -36,7 +36,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("INSERT users(name, lastName, age) VALUES ('" + name + "', '" + lastName + "', " + age + ")");
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -44,7 +44,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = Util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("DELETE FROM users WHERE id IN ('" + id + "')");
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -59,7 +59,7 @@ public class UserDaoJDBCImpl implements UserDao {
             }
             return usersList;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
@@ -68,7 +68,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("DELETE from users");
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 }

@@ -59,6 +59,7 @@ public class Util {
             sessionFactory = cfg.buildSessionFactory(serviceRegistry);
             session = sessionFactory.openSession();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return session;
     }
