@@ -21,8 +21,9 @@ public class Util {
     }
 
     public static Util getInstance() {
-        if (sInstance == null)
+        if (sInstance == null) {
             sInstance = new Util();
+        }
         return sInstance;
     }
 
