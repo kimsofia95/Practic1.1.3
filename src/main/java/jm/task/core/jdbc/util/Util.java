@@ -16,8 +16,23 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class Util {
-    // реализуйте настройку соеденения с БД
-    public static Connection DataBaseConnection(String className, String url, String login, String password) {
+    private static Util sInstance = null;
+    private final static String url = "jdbc:mysql://127.0.0.1:3306/study?useSSL=false&serverTimezone=Asia/Seoul";
+    private final static String login = "root";
+    private final static String password = "root";
+    private final static String className = "com.mysql.cj.jdbc.Driver";
+
+    private Util()
+    {
+    }
+    public static Util getInstance()
+    {
+        if (sInstance == null)
+            sInstance = new Util();
+        return sInstance;
+    }
+
+    public static Connection DataBaseConnection() {
         try {
             Class.forName(className).getDeclaredConstructor().newInstance();
             Connection connection = DriverManager.getConnection(url, login, password);
@@ -34,10 +49,10 @@ public class Util {
         Session session = null;
         try {
             Properties prop = new Properties();
-            prop.setProperty("connection.driver_class", "com.mysql.cj.jdbc.Driver");
-            prop.setProperty("hibernate.connection.url", "jdbc:mysql://127.0.0.1:3306/study?useSSL=false&serverTimezone=Asia/Seoul");
-            prop.setProperty("hibernate.connection.username", "root");
-            prop.setProperty("hibernate.connection.password", "root");
+            prop.setProperty("connection.driver_class", className);
+            prop.setProperty("hibernate.connection.url", url);
+            prop.setProperty("hibernate.connection.username", login);
+            prop.setProperty("hibernate.connection.password", password);
             prop.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
             prop.setProperty("hibernate.show_sql", "true");
             prop.setProperty("hibernate.format_sql", "true");
