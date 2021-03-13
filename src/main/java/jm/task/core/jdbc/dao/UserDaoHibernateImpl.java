@@ -38,9 +38,13 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         Session session = util.createHibernateSession();
-        Transaction tx1 = session.beginTransaction();
-        session.save(new User(name, lastName, age));
-        tx1.commit();
+        try {
+            Transaction tx1 = session.beginTransaction();
+            session.save(new User(name, lastName, age));
+            tx1.commit();
+        } catch (RuntimeException e) {
+            session.getSessionFactory().getCurrentSession().getTransaction().rollback();
+        }
         session.close();
         session.getSessionFactory().close();
     }
@@ -49,9 +53,13 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         Session session = util.createHibernateSession();
         User user = (User) session.get(User.class, id);
-        Transaction tx1 = session.beginTransaction();
-        session.delete(user);
-        tx1.commit();
+        try {
+            Transaction tx1 = session.beginTransaction();
+            session.delete(user);
+            tx1.commit();
+        } catch (RuntimeException e) {
+            session.getSessionFactory().getCurrentSession().getTransaction().rollback();
+        }
         session.close();
         session.getSessionFactory().close();
     }
@@ -69,11 +77,15 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() {
         Session session = util.createHibernateSession();
         List<User> users = getAllUsers();
-        Transaction tx1 = session.beginTransaction();
-        for (User user : users) {
-            session.delete(user);
+        try {
+            Transaction tx1 = session.beginTransaction();
+            for (User user : users) {
+                session.delete(user);
+            }
+            tx1.commit();
+        } catch (RuntimeException e) {
+            session.getSessionFactory().getCurrentSession().getTransaction().rollback();
         }
-        tx1.commit();
         session.close();
         session.getSessionFactory().close();
     }

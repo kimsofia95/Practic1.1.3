@@ -31,6 +31,7 @@ public class Util {
         try {
             Class.forName(className).getDeclaredConstructor().newInstance();
             Connection connection = DriverManager.getConnection(url, login, password);
+            connection.setAutoCommit(false);
             return connection;
         } catch (Exception e) {
             e.printStackTrace();
