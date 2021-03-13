@@ -39,7 +39,7 @@ public class Util {
         return null;
     }
 
-    public static Session createHibernateSession() {
+    public static SessionFactory createHibernateSession() {
         SessionFactory sessionFactory = null;
         ServiceRegistry serviceRegistry = null;
         Session session = null;
@@ -58,10 +58,9 @@ public class Util {
             serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(cfg.getProperties()).build();
             sessionFactory = cfg.buildSessionFactory(serviceRegistry);
-            session = sessionFactory.openSession();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return session;
+        return sessionFactory;
     }
 }
