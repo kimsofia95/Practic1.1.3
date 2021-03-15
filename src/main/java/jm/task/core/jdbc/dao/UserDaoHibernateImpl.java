@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private Util util = Util.getInstance();
+    public SessionFactory sessionFactory = Util.createHibernateSession();
     public UserDaoHibernateImpl() {
 
     }
@@ -23,100 +23,66 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
-            try {
-                session.createSQLQuery("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))").executeUpdate();
-            } catch (RuntimeException e) {
-                sessionFactory.getCurrentSession().getTransaction().rollback();
-            } finally {
-                session.close();
-                sessionFactory.close();
-            }
+            session.createSQLQuery("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))").executeUpdate();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
     @Override
     public void dropUsersTable() {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
-            try {
-                session.createSQLQuery("drop table IF EXISTS users").executeUpdate();
-            } catch (RuntimeException e) {
-                sessionFactory.getCurrentSession().getTransaction().rollback();
-            }
-            finally {
-                session.close();
-                sessionFactory.close();
-            }
+            session.createSQLQuery("drop table IF EXISTS users").executeUpdate();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
-            try {
-                Transaction tx1 = session.beginTransaction();
-                session.save(new User(name, lastName, age));
-                tx1.commit();
-            } catch (RuntimeException e) {
-                sessionFactory.getCurrentSession().getTransaction().rollback();
-            }
-            finally {
-                session.close();
-                sessionFactory.close();
-            }
+            Transaction tx1 = session.beginTransaction();
+            session.save(new User(name, lastName, age));
+            tx1.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
     @Override
     public void removeUserById(long id) {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
             User user = (User) session.get(User.class, id);
-            try {
-                Transaction tx1 = session.beginTransaction();
-                session.delete(user);
-                tx1.commit();
-            } catch (RuntimeException e) {
-                sessionFactory.getCurrentSession().getTransaction().rollback();
-            }
-            finally {
-                session.close();
-                sessionFactory.close();
-            }
+            Transaction tx1 = session.beginTransaction();
+            session.delete(user);
+            tx1.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
-            try {
-                List<User> result = session.createQuery("From User").list();
-                return result;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                session.close();
-                sessionFactory.close();
-            }
+            List<User> result = session.createQuery("From User").list();
+            session.close();
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
         return null;
     }
@@ -124,24 +90,17 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         try {
-            SessionFactory sessionFactory = util.createHibernateSession();
             Session session = sessionFactory.openSession();
             List<User> users = getAllUsers();
-            try {
-                Transaction tx1 = session.beginTransaction();
-                for (User user : users) {
-                    session.delete(user);
-                }
-                tx1.commit();
-            } catch (RuntimeException e) {
-                sessionFactory.getCurrentSession().getTransaction().rollback();
+            Transaction tx1 = session.beginTransaction();
+            for (User user : users) {
+                session.delete(user);
             }
-            finally {
-                session.close();
-                sessionFactory.close();
-            }
+            tx1.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
+            sessionFactory.getCurrentSession().getTransaction().rollback();
         }
     }
 }
