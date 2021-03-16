@@ -25,12 +25,15 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         Session session = null;
+        Transaction tx1 = null;
         try {
             session = sessionFactory.openSession();
+            tx1 = session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))").executeUpdate();
+            tx1.commit();
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
         }  finally {
             if (session != null) {
                 session.close();
@@ -41,12 +44,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         Session session = null;
+        Transaction tx1 = null;
         try {
             session = sessionFactory.openSession();
+            tx1 = session.beginTransaction();
             session.createSQLQuery("drop table IF EXISTS users").executeUpdate();
+            tx1.commit();
+
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
         } finally {
             if (session != null) {
                 session.close();
@@ -96,13 +103,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         Session session = null;
+        Transaction tx1 = null;
         try {
             session = sessionFactory.openSession();
             List<User> result = session.createQuery("From User").list();
+            tx1 = session.beginTransaction();
+            tx1.commit();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
         } finally {
             if (session != null) {
                 session.close();
