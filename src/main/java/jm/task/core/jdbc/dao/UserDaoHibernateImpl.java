@@ -1,5 +1,6 @@
 package jm.task.core.jdbc.dao;
 
+import com.mysql.cj.jdbc.BlobFromLocator;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
@@ -16,91 +17,119 @@ import java.util.Properties;
 
 public class UserDaoHibernateImpl implements UserDao {
     public SessionFactory sessionFactory = Util.createHibernateSession();
+
     public UserDaoHibernateImpl() {
 
     }
 
     @Override
     public void createUsersTable() {
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(20), lastName VARCHAR(40), age INT(3))").executeUpdate();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
             sessionFactory.getCurrentSession().getTransaction().rollback();
+        }  finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void dropUsersTable() {
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             session.createSQLQuery("drop table IF EXISTS users").executeUpdate();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
             sessionFactory.getCurrentSession().getTransaction().rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
+        Session session = null;
+        Transaction tx1 = null;
         try {
-            Session session = sessionFactory.openSession();
-            Transaction tx1 = session.beginTransaction();
+            session = sessionFactory.openSession();
+            tx1 = session.beginTransaction();
             session.save(new User(name, lastName, age));
             tx1.commit();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public void removeUserById(long id) {
+        Session session = null;
+        Transaction tx1 = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             User user = (User) session.get(User.class, id);
-            Transaction tx1 = session.beginTransaction();
+            tx1 = session.beginTransaction();
             session.delete(user);
             tx1.commit();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 
     @Override
     public List<User> getAllUsers() {
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             List<User> result = session.createQuery("From User").list();
-            session.close();
             return result;
         } catch (Exception e) {
             e.printStackTrace();
             sessionFactory.getCurrentSession().getTransaction().rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
         return null;
     }
 
     @Override
     public void cleanUsersTable() {
+        Session session = null;
+        Transaction tx1 = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             List<User> users = getAllUsers();
-            Transaction tx1 = session.beginTransaction();
+            tx1 = session.beginTransaction();
             for (User user : users) {
                 session.delete(user);
             }
             tx1.commit();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
-            sessionFactory.getCurrentSession().getTransaction().rollback();
+            tx1.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }
