@@ -127,11 +127,8 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction tx1 = null;
         try {
             session = sessionFactory.openSession();
-            List<User> users = getAllUsers();
             tx1 = session.beginTransaction();
-            for (User user : users) {
-                session.delete(user);
-            }
+            session.createSQLQuery("delete from users").executeUpdate();
             tx1.commit();
         } catch (Exception e) {
             e.printStackTrace();
