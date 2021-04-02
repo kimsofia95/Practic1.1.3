@@ -44,7 +44,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT users(name, lastName, age) VALUES (name=?, lastName=?, age=?)";
+        String sql = "INSERT into users(name, lastName, age) VALUES (?, ?, ?)";
         try (Connection connection = util.DataBaseConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try {
                 preparedStatement.setString(1, name);

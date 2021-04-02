@@ -22,6 +22,7 @@ public class Main {
                 System.out.println("Name: " + user.getName() + " " + user.getLastName() + " Age: " + user.getAge());
             }
 
+            userService.removeUserById(1);
             userService.cleanUsersTable();
             userService.dropUsersTable();
         } catch (Exception e) {
