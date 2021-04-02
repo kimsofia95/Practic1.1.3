@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -47,9 +44,13 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (Connection connection = util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
+        String sql = "INSERT users(name, lastName, age) VALUES (name=?, lastName=?, age=?)";
+        try (Connection connection = util.DataBaseConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try {
-                stmt.executeUpdate("INSERT users(name, lastName, age) VALUES ('" + name + "', '" + lastName + "', " + age + ")");
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setByte(3, age);
+                preparedStatement.executeUpdate();
                 connection.commit();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -61,9 +62,12 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try (Connection connection = Util.DataBaseConnection(); Statement stmt = connection.createStatement()) {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection connection = Util.DataBaseConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             try {
-                stmt.executeUpdate("DELETE FROM users WHERE id IN ('" + id + "')");
+                preparedStatement.setLong(1, id);
+                preparedStatement.executeUpdate();
+                //prepared stmt
                 connection.commit();
             } catch (Exception e) {
                 e.printStackTrace();
